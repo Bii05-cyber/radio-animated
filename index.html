@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Radio Widget</title>
+
+<style>
+  :root {
+    /* Adjust these to match the real play button position */
+    --btn-left: 300px;
+    --btn-top: 215px;
+    --btn-width: 65px;
+    --btn-height: 35px;
+
+    --radio-off: url("radio1.png");
+    --radio-hover: url("radio2.png");
+    --radio-on: url("radio-animated-1.gif");
+  }
+
+  body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: transparent;
+  }
+
+  .radio {
+    position: relative;
+    width: 500px;   /* keep this equal to your image width */
+    height: 340px;  /* adjust to match full radio height */
+    background: var(--radio-off) no-repeat center/cover;
+    transition: background 0.15s ease;
+  }
+
+  /* 🔴 Visible button area (FOR YOU TO ALIGN) */
+  .play-btn {
+    position: absolute;
+    left: var(--btn-left);
+    top: var(--btn-top);
+    width: var(--btn-width);
+    height: var(--btn-height);
+    background: rgba(255, 0, 0, 0.4); /* <-- visible so you can see it */
+    border: 2px solid red;
+    cursor: pointer;
+  }
+
+  .radio.hover-off .play-btn:hover {
+    background: rgba(0, 255, 0, 0.4); /* turns green on hover when OFF */
+  }
+</style>
+
+</head>
+<body>
+
+<div class="radio hover-off" id="radioBox">
+  <div class="play-btn" id="playBtn"></div>
+</div>
+
+<script>
+  const radioBox = document.getElementById("radioBox");
+  const playBtn = document.getElementById("playBtn");
+
+  let isPlaying = false;
+  let audio = new Audio("YOUR_RADIO_STREAM_URL_HERE");
+
+  /* Hover logic */
+  playBtn.addEventListener("mouseenter", () => {
+    if (!isPlaying) radioBox.style.background = "var(--radio-hover)";
+  });
+
+  playBtn.addEventListener("mouseleave", () => {
+    if (!isPlaying) radioBox.style.background = "var(--radio-off)";
+  });
+
+  /* Click = toggle */
+  playBtn.addEventListener("click", () => {
+    if (!isPlaying) {
+      // TURN ON
+      isPlaying = true;
+      audio.play().catch(() => {});
+      radioBox.style.background = "var(--radio-on)";
+      radioBox.classList.remove("hover-off");
+    } else {
+      // TURN OFF
+      isPlaying = false;
+      audio.pause();
+      audio.currentTime = 0;
+      radioBox.style.background = "var(--radio-off)";
+      radioBox.classList.add("hover-off");
+    }
+  });
+</script>
+
+</body>
+</html>
